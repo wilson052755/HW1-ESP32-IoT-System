@@ -67,7 +67,6 @@ cd c:\Users\user\Desktop\DIC4
 本專案已使用 Git 進行版本管理，並將原始碼推送至 GitHub 進行備份與開源交流：
 - **GitHub 儲存庫**：[HW1-ESP32-IoT-System](https://github.com/wilson052755/HW1-ESP32-IoT-System)
 - 為了確保隱私與降低容量，資料庫實體檔案 (`aiotdb.db`) 已列入 `.gitignore` 不隨之推送。
-- **作業繳交包**：專案根目錄內附贈了精簡版的作業封包 `4112056025_project.zip`，裡面收錄了模擬器、儀表板平台及說明文件等精簡所需核心。
 
 ---
 *註：任何專案後續的更新與擴增，皆會同步反映於此 README 文件，維持內容最新。*
