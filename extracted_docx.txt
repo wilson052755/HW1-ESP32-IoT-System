@@ -1,0 +1,49 @@
+4112056025 資工三 林鈺紳
+一、專案目的
+本階段主要目標為建立輕量化的後端 API，負責接收來自 AIoT 感測器（如溫度、濕度感測器）傳送的數據，並自動將資料解析後安全地儲存至 MySQL 關聯式資料庫中，為後續的數據可視化及分析奠定基礎。
+二、實作過程與具體成果
+1. PHP 後端 API 端點建置 (addData.php)
+撰寫了處理 HTTP GET 請求的 PHP 腳本，透過 URL Query String 接收感測網頁回傳的數值（如：?temp=25.5&hum=60）。
+實作資料庫安全連線機制，並**採用 Prepared Statement（預處理語句）**寫入資料表，徹底防範 SQL Injection（資料隱碼）攻擊，提升系統安全性。
+2. 資料庫環境自動建立與對接 (aiotdb)
+透過資料庫管理指令，協助排除初始環境缺少資料庫的問題。
+讀取並整合了 aiotdb 資料庫中 sensors 資料表的綱要（Schema）設定，確認 temp (溫度) 與 humid (濕度) 欄位的資料型態及寫入規則，確保程式端邏輯與資料庫庫表設計完美對接。
+3. Python Flask 輕量化 API 服務實作 (app.py)
+為了增加系統擴展性與彈性，除了 PHP 方案外，額外開發了基於 Python Flask 框架的網頁伺服器功能。
+安裝了 flask 與 mysql-connector-python 依賴套件。
+設計並實作了 RESTful 風格的路由（Route）：http://localhost:5000/aiot/<temp>/<humid>。
+運用了型別轉換邏輯（支援動態浮點數與整數參數傳遞），不僅提升了感測器硬體發送請求的便利性，也讓資料能正確寫入 MySQL 資料庫。
+實作了 JSON 格式的 HTTP 回應機制（包含 HTTP 狀態碼與成功訊息），方便前端或除錯工具確認資料新增狀態與新增資料的最新 ID。
+三、系統測試與驗證
+本機伺服器運行成功：Flask 伺服器順利運行於本地環境 (Port: 5000)。
+端對端 (End-to-End) 測試通過：成功透過瀏覽器與 HTTP 請求模擬終端設備發送訊號（如存取 /aiot/25.5/60），確認後端能正確解析 URL 參數，回傳 { "status": "success", ... } 之 JSON 訊息，並於 MySQL 資料庫驗證資料確實新增成功無誤。
+3-1測試結果：
+3-2測試結果：
+目標：Project Description: IoT Data Logging (DIC3-1 & DIC3-2)
+DIC3-1: PHP & MySQL ImplementationThe first phase of the project implements a small IoT data logging system using PHP and MySQL.
+A PHP script addData.php receives sensor readings via HTTP GET requests, for example:
+http://localhost/aiot/addData.php?temp=11&humid=11
+The script validates input values (temp and humid) and inserts them into the sensors table of a MySQL database.
+The sensors table typically contains the following columns:
+id (INT, primary key, auto-increment)
+temp (FLOAT)
+humid (FLOAT)
+created_at (TIMESTAMP, default CURRENT_TIMESTAMP)
+This setup allows IoT devices or web clients to easily send environmental data to the server for storage and later analysis.
+DIC3-2: Flask & SQLite MigrationThe second phase of the project upgrades the backend from PHP/MySQL to Python Flask with SQLite3, making the system more lightweight and portable.
+The PHP script is replaced by app.py, a Flask application that handles HTTP GET requests to record sensor data.
+The MySQL database is replaced with an SQLite3 database file: aiotdb.db.
+The sensors table is defined as:
+CREATE TABLE sensors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    temp FLOAT DEFAULT 0,
+    humid FLOAT DEFAULT 0,
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+The Flask app handles requests like:
+http://localhost:5000/addData?temp=11&humid=11
+and inserts or updates data in the SQLite database.
+This migration improves cross-platform compatibility, simplifies deployment, and reduces server resource usage.
+Summary:This small project demonstrates a complete IoT data collection workflow: receiving sensor data via HTTP, validating it, and storing it in a database. DIC3-1 uses PHP/MySQL, while DIC3-2 modernizes the backend to Flask/SQLite for a more portable and maintainable solution.

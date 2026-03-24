@@ -1,0 +1,15 @@
+# Database files
+*.sqlite
+*.db
+aiotdb.db
+
+# Python caches
+__pycache__/
+*.pyc
+
+# IDEs
+.vscode/
+.idea/
+
+# Windows
+Thumbs.db
